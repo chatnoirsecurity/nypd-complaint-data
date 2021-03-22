@@ -19,16 +19,8 @@ jobs:
           uses: actions/checkout@v2
           with:
             path: main
-        - name: Zip the thing
-          uses: thedoctor0/zip-release@master
-          with:
-            filename: "${{ steps.current-time.outputs.formattedTime }}.zip"
-            exclusions: '*.git*'
         - uses: ncipollo/release-action@v1
           with:
-            artifacts: "${{ steps.current-time.outputs.formattedTime }}.zip"
-            artifactErrorsFailBuild: true
-            artifactContentType: application/zip
             commit: main
             tag: "${{ steps.current-time.outputs.formattedTime }}"
             token: ${{ secrets.GITHUB_TOKEN }}
