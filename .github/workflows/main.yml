@@ -1,0 +1,34 @@
+name: ZipNRelease
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+        - name: Get current time
+          uses: 1466587594/get-current-time@v2
+          id: current-time
+          with:
+            format: YYYY-MM-DD
+            utcOffset: "+08:00"
+        - name: checkout
+          uses: actions/checkout@v2
+          with:
+            path: main
+        - name: Zip the thing
+          uses: thedoctor0/zip-release@master
+          with:
+            filename: "${{ steps.current-time.outputs.formattedTime }}.zip"
+            exclusions: '*.git*'
+        - uses: ncipollo/release-action@v1
+          with:
+            artifacts: "${{ steps.current-time.outputs.formattedTime }}.zip"
+            artifactErrorsFailBuild: true
+            artifactContentType: application/zip
+            commit: main
+            tag: "${{ steps.current-time.outputs.formattedTime }}"
+            token: ${{ secrets.GITHUB_TOKEN }}
